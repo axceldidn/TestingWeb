@@ -90,18 +90,19 @@ const MENU = {
   tu: [['home', 'Beranda'], ['spp', 'SPP'], ['kas', 'Kas'], ['gaji', 'Gaji'], ['lainnya', 'Lainnya']]
 };
 const MORE = {
-  admin: [['kepsek', 'Dasbor kepala sekolah', 'Perbandingan kelas, tren kehadiran, ketuntasan, guru belum mengisi'], ['raport', 'Raport dan cetak satu kelas', 'Catatan wali kelas, sikap, cetak raport kelas dalam satu PDF'], ['pengaturan', 'Pengaturan sekolah', 'Wali kelas, tanggal raport, pengingat otomatis, identitas'], ['laporanguru', 'Presensi dan jurnal guru', 'Laporan bulanan untuk kepala sekolah'], ['spp', 'SPP dan tagihan', 'Catat pembayaran, buat tagihan'], ['tunggakan', 'Tunggakan', 'Siswa yang belum melunasi, kirim pengingat WhatsApp'], ['kas', 'Kas masuk dan keluar', 'Buku kas sekolah'], ['gaji', 'Gaji guru dan staf', 'Daftar gaji bulanan dan slip'], ['datasiswa', 'Data siswa', 'Nama wali dan nomor HP'], ['bk', 'Catatan BK', 'Catatan bimbingan konseling dan riwayat akses'], ['jadwal', 'Jadwal pelajaran', 'Atur jadwal tiap kelas dan guru'], ['ujian', 'Jadwal dan kartu ujian', 'Buat jadwal ujian, terbitkan, cetak kartu peserta'], ['peringkat', 'Peringkat', 'Peringkat kelas dan angkatan per semester'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilai siswa antar semester'], ['kenaikan', 'Kenaikan kelas dan kelulusan', 'Proses akhir tahun dan arsip siswa lulus'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender kegiatan sekolah'], ['rekap', 'Rekap absensi', 'Rekap per bulan, bisa diunduh ke Excel'], ['impor', 'Impor siswa', 'Masukkan banyak siswa dari file Excel atau CSV'], ['sistem', 'Log dan backup', 'Riwayat perubahan, backup, pulihkan data, kunci notifikasi'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
-  guru: [['jurnal', 'Presensi dan jurnal mengajar', 'Presensi masuk dan pulang, materi yang diajarkan'], ['raport', 'Raport', 'Catatan wali kelas, sikap, ekstrakurikuler, cetak raport satu kelas (PDF)'], ['slip', 'Slip gaji', 'Slip gaji bulanan'], ['peringkat', 'Peringkat', 'Peringkat kelas dan angkatan'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilai siswa antar semester'], ['jadwal', 'Jadwal mengajar', 'Jadwal mengajar Anda'], ['ujian', 'Jadwal dan kartu ujian', 'Lihat jadwal ujian, cetak kartu peserta satu kelas'], ['rekap', 'Rekap absensi', 'Rekap per bulan, bisa diunduh ke Excel'], ['izin', 'Izin dan sakit siswa', 'Pengajuan dari orang tua'], ['pesan', 'Pesan ke orang tua', 'Percakapan pribadi'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
+  admin: [['dataguru', 'Data induk guru', 'NIP, jabatan, status kepegawaian'], ['km', 'Penilaian Kurikulum Merdeka', 'Tujuan pembelajaran, nilai formatif dan sumatif, raport siap cetak'], ['datakelas', 'Data siswa per kelas', 'Tanggal lahir, alamat, asal sekolah, orang tua'], ['kepsek', 'Dasbor kepala sekolah', 'Perbandingan kelas, tren kehadiran, ketuntasan, guru belum mengisi'], ['raport', 'Raport dan cetak satu kelas', 'Catatan wali kelas, sikap, cetak raport kelas dalam satu PDF'], ['pengaturan', 'Pengaturan sekolah', 'Wali kelas, tanggal raport, pengingat otomatis, identitas'], ['laporanguru', 'Presensi dan jurnal guru', 'Laporan bulanan untuk kepala sekolah'], ['spp', 'SPP dan tagihan', 'Catat pembayaran, buat tagihan'], ['tunggakan', 'Tunggakan', 'Siswa yang belum melunasi, kirim pengingat WhatsApp'], ['kas', 'Kas masuk dan keluar', 'Buku kas sekolah'], ['gaji', 'Gaji guru dan staf', 'Daftar gaji bulanan dan slip'], ['datasiswa', 'Data siswa', 'Nama wali dan nomor HP'], ['bk', 'Catatan BK', 'Catatan bimbingan konseling dan riwayat akses'], ['jadwal', 'Jadwal pelajaran', 'Atur jadwal tiap kelas dan guru'], ['ujian', 'Jadwal dan kartu ujian', 'Buat jadwal ujian, terbitkan, cetak kartu peserta'], ['peringkat', 'Peringkat', 'Peringkat kelas dan angkatan per semester'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilai siswa antar semester'], ['kenaikan', 'Kenaikan kelas dan kelulusan', 'Proses akhir tahun dan arsip siswa lulus'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender kegiatan sekolah'], ['rekap', 'Rekap absensi', 'Rekap per bulan, bisa diunduh ke Excel'], ['impor', 'Impor siswa', 'Masukkan banyak siswa dari file Excel atau CSV'], ['sistem', 'Log dan backup', 'Riwayat perubahan, backup, pulihkan data, kunci notifikasi'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
+  guru: [['dataguru', 'Data induk guru', 'NIP, jabatan, status kepegawaian'], ['km', 'Penilaian Kurikulum Merdeka', 'Tujuan pembelajaran, nilai formatif dan sumatif, raport siap cetak'], ['datakelas', 'Data siswa per kelas', 'Tanggal lahir, alamat, asal sekolah, orang tua'], ['jurnal', 'Presensi dan jurnal mengajar', 'Presensi masuk dan pulang, materi yang diajarkan'], ['raport', 'Raport', 'Catatan wali kelas, sikap, ekstrakurikuler, cetak raport satu kelas (PDF)'], ['slip', 'Slip gaji', 'Slip gaji bulanan'], ['peringkat', 'Peringkat', 'Peringkat kelas dan angkatan'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilai siswa antar semester'], ['jadwal', 'Jadwal mengajar', 'Jadwal mengajar Anda'], ['ujian', 'Jadwal dan kartu ujian', 'Lihat jadwal ujian, cetak kartu peserta satu kelas'], ['rekap', 'Rekap absensi', 'Rekap per bulan, bisa diunduh ke Excel'], ['izin', 'Izin dan sakit siswa', 'Pengajuan dari orang tua'], ['pesan', 'Pesan ke orang tua', 'Percakapan pribadi'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
   siswa: [['laporan', 'Laporan hasil belajar', 'Kehadiran, nilai, dan peringkat. Bisa diunduh PDF'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilaimu dari semester ke semester'], ['ujian', 'Jadwal dan kartu ujian', 'Jadwal ujian dan kartu peserta PDF'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
   ortu: [['tagihan', 'Tagihan sekolah', 'SPP dan tagihan anak, status lunas'], ['laporan', 'Laporan hasil belajar', 'Kehadiran, nilai, dan peringkat. Bisa diunduh PDF'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilai anak dari semester ke semester'], ['ujian', 'Jadwal dan kartu ujian', 'Jadwal ujian dan kartu peserta PDF'], ['jadwal', 'Jadwal pelajaran anak', 'Jadwal tiap hari'], ['pesan', 'Pesan ke guru', 'Percakapan pribadi dengan guru'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
-  kepsek: [['tunggakan', 'Tunggakan SPP', 'Siswa yang belum melunasi'], ['rekap', 'Rekap absensi', 'Rekap per bulan, bisa diunduh ke Excel'], ['peringkat', 'Peringkat', 'Peringkat kelas dan angkatan per semester'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilai siswa antar semester'], ['jadwal', 'Jadwal pelajaran', 'Jadwal tiap kelas'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['slip', 'Slip gaji', 'Slip gaji bulanan'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
-  tu: [['tunggakan', 'Tunggakan', 'Siswa yang belum melunasi, kirim pengingat WhatsApp'], ['datasiswa', 'Data siswa', 'Nama wali dan nomor HP'], ['impor', 'Impor siswa dari Excel', 'NIS, nama, kelas, wali, HP'], ['slip', 'Slip gaji', 'Slip gaji bulanan'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']]
+  kepsek: [['dataguru', 'Data induk guru', 'NIP, jabatan, status kepegawaian'], ['km', 'Penilaian Kurikulum Merdeka', 'Tujuan pembelajaran, nilai formatif dan sumatif, raport siap cetak'], ['datakelas', 'Data siswa per kelas', 'Tanggal lahir, alamat, asal sekolah, orang tua'], ['tunggakan', 'Tunggakan SPP', 'Siswa yang belum melunasi'], ['rekap', 'Rekap absensi', 'Rekap per bulan, bisa diunduh ke Excel'], ['peringkat', 'Peringkat', 'Peringkat kelas dan angkatan per semester'], ['perkembangan', 'Perkembangan nilai', 'Grafik nilai siswa antar semester'], ['jadwal', 'Jadwal pelajaran', 'Jadwal tiap kelas'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['slip', 'Slip gaji', 'Slip gaji bulanan'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']],
+  tu: [['dataguru', 'Data induk guru', 'NIP, jabatan, status kepegawaian'], ['datakelas', 'Data siswa per kelas', 'Tanggal lahir, alamat, asal sekolah, orang tua'], ['tunggakan', 'Tunggakan', 'Siswa yang belum melunasi, kirim pengingat WhatsApp'], ['datasiswa', 'Data siswa', 'Nama wali dan nomor HP'], ['impor', 'Impor siswa dari Excel', 'NIS, nama, kelas, wali, HP'], ['slip', 'Slip gaji', 'Slip gaji bulanan'], ['info', 'Pengumuman dan agenda', 'Kabar dan kalender sekolah'], ['notif', 'Notifikasi', 'Kotak masuk dan notifikasi layar kunci'], ['sandi', 'Ubah kata sandi', 'Ganti kata sandi akunmu']]
 };
 const VIEWS = {
   home: () => ({ admin: hAdmin, guru: hGuru, siswa: vLihat, ortu: vLihat, kepsek: vKepsek, tu: vTuBeranda }[me.role])(),
   akun: vAkun, data: vData, siswa: vSiswa, absen: vAbsen, nilai: vNilai, tugas: vTugas, raport: vRaport, tugasku: vTugasku, notif: vNotif, laporan: vLaporan, peringkat: vPeringkat,
   lainnya: vLainnya, sandi: vSandi, ujian: vUjian, kenaikan: vKenaikan, perkembangan: vPerkembangan, jadwal: vJadwal, izin: vIzin, info: vInfo, pesan: vPesan, rekap: vRekap, impor: vImpor, sistem: vSistem,
-  kepsek: vKepsek, jurnal: vJurnal, laporanguru: vLaporanGuru, spp: vSpp, tunggakan: vTunggakan, tagihan: vTagihanOrtu, kas: vKas, gaji: vGaji, slip: vSlip, bk: vBk, datasiswa: vDataSiswa, pengaturan: vPengaturan
+  kepsek: vKepsek, jurnal: vJurnal, laporanguru: vLaporanGuru, spp: vSpp, tunggakan: vTunggakan, tagihan: vTagihanOrtu, kas: vKas, gaji: vGaji, slip: vSlip, bk: vBk, datasiswa: vDataSiswa, pengaturan: vPengaturan, datakelas: vDataKelas,
+  dataguru: vDataGuru, km: vKm, kmtp: vKmTp, kmformatif: vKmFormatif, kmsumatif: vKmSumatif, kmrekap: vKmRekap, kmrapor: vKmRapor, kmpengaturan: vKmPengaturan
 };
 function shell() {
   maxId = null;
@@ -202,6 +203,7 @@ async function dasbor(guru) {
     : stat(sis.length, 'Siswa') + stat(kids.size, 'Kelas') + stat(pctHari == null ? '-' : pctHari + '%', 'Hadir hari ini');
   const tgl7 = t => new Date(t + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'short' });
   $('#main').innerHTML = head('Beranda', adm ? 'Dasbor sekolah' : 'Dasbor guru', `${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}${ta ? ` - Semester ${ta.semester} ${h(ta.nama)}` : ''}`) +
+    (guru ? `<div class="call"><span>Nilai formatif, sumatif, dan raport Kurikulum Merdeka</span><button class="btn sm" onclick="go('km')">Buka</button></div><div class="call"><span>Data diri siswa dan orang tua per kelas</span><button class="btn sm" onclick="go('datakelas')">Buka</button></div>` : '') +
     (adm && !ta ? call('Belum ada semester aktif.', 'Nilai belum bisa diinput.', 'Atur', 'data') : '') +
     (vf ? call(vf + ' absen mandiri', 'menunggu verifikasi', 'Verifikasi', 'absen') : '') +
     (izn ? call(izn + ' pengajuan izin', 'menunggu keputusan', 'Buka', 'izin') : '') +
@@ -1199,16 +1201,18 @@ function parseCsv(t) {
   row.push(cell); out.push(row);
   return out.filter(r => r.some(x => String(x).trim()));
 }
-function vImpor() {
+async function vImpor() {
   IMPOR = null; IMPOR_HASIL = [];
-  $('#main').innerHTML = head('Impor', 'Impor siswa dari Excel', 'Unggah file Excel (.xlsx) atau CSV. Baris pertama adalah judul kolom: NIS, Nama, Jenjang/Kelas, Wali, HP. Data diperiksa dulu sebelum disimpan. NIS yang sudah ada akan diperbarui.') +
+  const { data: kl } = await sb.from('kelas').select('nama').order('nama');
+  $('#main').innerHTML = head('Impor', 'Impor siswa dari Excel', 'Unggah file Excel (.xlsx) atau CSV, termasuk lembar Data Siswa dari e-Rapor. Judul kolom dicari otomatis. Data diperiksa dulu sebelum disimpan. NIS yang sudah ada akan diperbarui.') +
     `<div class="sec"><label style="margin-top:0">File Excel atau CSV</label><input id="if" type="file" accept=".xlsx,.xls,.csv,text/csv" onchange="pilihFileImpor()">
     <label>Atau tempel data di sini</label><textarea id="it" rows="5" oninput="IMPOR=null" placeholder="NIS;Nama;Jenjang/Kelas;Wali;HP"></textarea>
-    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="periksaImpor()">Periksa data</button><button class="btn alt" onclick="contohImpor()">Unduh format Excel</button></div>
-    <p class="hint" style="margin:10px 0 0">Wali adalah nama wali murid, HP adalah nomor HP wali (boleh 08..., 628..., atau +62...). Kolom Wali dan HP boleh kosong. Jika kosong untuk siswa yang sudah ada, isian lama tidak dihapus.</p></div><div id="ip"></div>`;
+    <label>Kelas untuk semua siswa di file (isi jika file tidak punya kolom kelas)</label><input id="ik" list="dlKelasImpor" placeholder="Contoh: 5A"><datalist id="dlKelasImpor">${(kl || []).map(x => `<option value="${h(x.nama)}">`).join('')}</datalist>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn" style="margin:0" onclick="periksaImpor()">Periksa data</button><button class="btn alt" style="margin:0" onclick="contohImpor()">Unduh format Excel</button></div>
+    <p class="hint" style="margin:10px 0 0">Wajib: NIS (atau NISN) dan Nama. Kolom lain boleh dilewati: Jenjang/Kelas, NISN, L/P, Tempat Lahir, Tanggal Lahir, Agama, Pendidikan Sebelumnya, Alamat, Nama Ayah, Nama Ibu, Pekerjaan Ayah, Pekerjaan Ibu, Wali, HP. Isian kosong di file tidak menghapus data lama.</p></div><div id="ip"></div>`;
 }
 async function contohImpor() {
-  const kepala = ['NIS', 'Nama', 'Jenjang/Kelas', 'Wali', 'HP'];
+  const kepala = ['NIS', 'NISN', 'Nama', 'L/P', 'Jenjang/Kelas', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Pendidikan Sebelumnya', 'Alamat', 'Kelurahan/Desa', 'Kecamatan', 'Nama Ayah', 'Nama Ibu', 'Pekerjaan Ayah', 'Pekerjaan Ibu', 'Wali', 'HP'];
   try {
     await muatSkrip(SHEETJS);
     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([kepala]), 'Siswa');
@@ -1219,42 +1223,80 @@ async function pilihFileImpor() {
   const f = $('#if').files?.[0];
   if (!f) return;
   try {
-    if (/\.xlsx?$/i.test(f.name)) { await muatSkrip(SHEETJS); const wb = XLSX.read(await f.arrayBuffer()); IMPOR = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: '' }); }
+    if (/\.xlsx?$/i.test(f.name)) { await muatSkrip(SHEETJS); const wb = XLSX.read(await f.arrayBuffer(), { cellDates: true }); IMPOR = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, dateNF: 'yyyy-mm-dd', defval: '' }); }
     else IMPOR = parseCsv(await f.text());
     periksaImpor();
   } catch (e) { toast(e.message || 'File tidak bisa dibaca', 1); }
 }
 const ALIAS_IMPOR = {
-  nis: ['nis', 'nomor induk', 'no induk', 'nisn'],
-  nama: ['nama', 'nama siswa', 'nama lengkap'],
+  nis: ['nis', 'nomor induk', 'no induk'],
+  nama: ['nama', 'nama siswa', 'nama lengkap', 'nama peserta didik'],
   kelas: ['jenjang/kelas', 'jenjang / kelas', 'kelas', 'jenjang', 'rombel', 'kelas/jenjang'],
-  wali: ['wali', 'nama wali', 'wali murid', 'orang tua', 'nama orang tua', 'orangtua'],
-  hp: ['hp', 'no hp', 'no. hp', 'nomor hp', 'no telp', 'telepon', 'no wa', 'wa', 'whatsapp', 'hp wali']
+  wali: ['wali', 'nama wali', 'wali murid', 'nama wali murid'],
+  hp: ['hp', 'no hp', 'no. hp', 'nomor hp', 'no telp', 'telepon', 'no wa', 'wa', 'whatsapp', 'hp wali', 'hp orang tua']
 };
+const ALIAS_EXTRA = {
+  nisn: ['nisn'], jenis_kelamin: ['l/p', 'jk', 'jenis kelamin', 'lp', 'kelamin'], tempat_lahir: ['tempat lahir', 'tempat'], tanggal_lahir: ['tanggal lahir', 'tgl lahir'],
+  agama: ['agama'], anak_ke: ['anak ke', 'anak ke-', 'anak ke -'], pendidikan_sebelumnya: ['pendidikan sebelumnya', 'asal sekolah', 'sekolah asal', 'tk/paud', 'pendidikan sebelumnya (tk/paud/sd)'],
+  tgl_masuk: ['tanggal masuk', 'diterima di sekolah ini', 'tgl masuk'], alamat: ['alamat', 'alamat peserta didik', 'alamat siswa'], kelurahan: ['kelurahan', 'desa', 'kelurahan/desa', 'desa/kelurahan'], kecamatan: ['kecamatan'],
+  nama_ayah: ['nama ayah', 'ayah'], pekerjaan_ayah: ['pekerjaan ayah'], nama_ibu: ['nama ibu', 'ibu'], pekerjaan_ibu: ['pekerjaan ibu'],
+  alamat_ortu: ['alamat orang tua', 'alamat ortu'], kelurahan_ortu: ['kelurahan orang tua', 'kelurahan/desa (ortu)', 'kelurahan ortu'], kecamatan_ortu: ['kecamatan orang tua', 'kecamatan (ortu)', 'kecamatan ortu'], pekerjaan_wali: ['pekerjaan wali']
+};
+const LABEL_EXTRA = { tanggal_lahir: 'tanggal lahir', tgl_masuk: 'tanggal masuk', jenis_kelamin: 'L/P', anak_ke: 'anak ke' };
+function bacaExtra(r, ixe) {
+  const ex = {}, salah = [];
+  Object.entries(ixe).forEach(([k, i]) => {
+    if (i < 0) return;
+    const mentah = r[i], j = KOLOM_JENIS[k] || 't';
+    if (!String(mentah instanceof Date ? 'x' : mentah ?? '').trim()) return;
+    let v;
+    if (j === 'd') v = tglIso(mentah);
+    else if (j === 'jk') v = normJk(mentah);
+    else if (j === 'n') { const n = parseInt(mentah); v = n > 0 ? n : null; }
+    else v = String(mentah).trim();
+    if (v === null) salah.push(LABEL_EXTRA[k] || k); else if (v !== '') ex[k] = v;
+  });
+  return { ex, salah };
+}
 async function periksaImpor() {
-  const rows = IMPOR || parseCsv($('#it').value);
-  if (rows.length < 2) return toast('Belum ada data. Unggah file atau tempel data dulu. Baris pertama harus judul kolom.', 1);
-  const hd = rows[0].map(x => String(x).trim().toLowerCase().replace(/\s+/g, ' '));
+  const semua = IMPOR || parseCsv($('#it').value);
+  const norm = x => String(x ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+  // judul kolom dicari di 8 baris pertama (lembar e-Rapor punya baris judul bertingkat)
+  let hi = semua.findIndex((r, i) => i < 8 && r.some(x => ALIAS_IMPOR.nama.includes(norm(x))) && r.some(x => ALIAS_IMPOR.nis.includes(norm(x)) || ALIAS_EXTRA.nisn.includes(norm(x))));
+  if (hi < 0) hi = 0;
+  const rows = semua.slice(hi);
+  if (rows.length < 2) return toast('Belum ada data. Unggah file atau tempel data dulu. Harus ada baris judul kolom.', 1);
+  const hd = rows[0].map(norm);
   let ix = {};
   Object.entries(ALIAS_IMPOR).forEach(([k, al]) => { ix[k] = hd.findIndex(x => al.includes(x)); });
+  const ixe = Object.fromEntries(Object.entries(ALIAS_EXTRA).map(([k, al]) => [k, hd.findIndex(x => al.includes(x))]));
+  if (ix.nis < 0 && ixe.nisn >= 0) ix.nis = ixe.nisn;                       // hanya ada NISN: dipakai sebagai nomor induk
+  const jalan = hd.indexOf('jalan');
+  if (jalan >= 0 && ixe.alamat_ortu < 0) { ixe.alamat_ortu = jalan; ixe.kelurahan_ortu = ixe.kelurahan; ixe.kecamatan_ortu = ixe.kecamatan; ixe.kelurahan = -1; ixe.kecamatan = -1; }   // blok "Orang Tua" di e-Rapor
+  const kelasSemua = ($('#ik').value || '').trim().replace(/^kelas\s+/i, '').replace(/\s+/g, '');
   if (ix.nis < 0 && ix.nama < 0 && ix.kelas < 0) ix = { nis: 0, nama: 1, kelas: 2, wali: hd.length > 3 ? 3 : -1, hp: hd.length > 4 ? 4 : -1 };   // judul tidak dikenali: urutan standar
-  if (ix.nis < 0 || ix.nama < 0 || ix.kelas < 0) return toast('Judul kolom harus memuat NIS, Nama, dan Jenjang/Kelas', 1);
-  const [k, s] = await Promise.all([sb.from('kelas').select('id,nama'), ambil(() => sb.from('siswa').select('nis,nama_wali,hp_wali').order('id'))]);
+  if (ix.nis < 0 || ix.nama < 0) return toast('Judul kolom harus memuat NIS (atau NISN) dan Nama', 1);
+  if (ix.kelas < 0 && !kelasSemua) return toast('File ini tidak punya kolom kelas. Isi kolom "Kelas untuk semua siswa di file" di atas.', 1);
+  const [k, s] = await Promise.all([sb.from('kelas').select('id,nama'), ambil(() => sb.from('siswa').select('nis,nama_wali,hp_wali,' + KOLOM_EXTRA.join(',')).order('id'))]);
   const kk = Object.fromEntries(k.data.map(x => [x.nama.toLowerCase(), x.id])), ada = Object.fromEntries(s.map(x => [String(x.nis), x])), lihat = new Set();
   const sel = (r, i) => i < 0 ? '' : String(r[i] ?? '').trim();
   IMPOR_HASIL = rows.slice(1).map((r, i) => {
-    const nis = sel(r, ix.nis), nama = sel(r, ix.nama), kelas = sel(r, ix.kelas).replace(/^kelas\s+/i, '').replace(/\s+/g, ''), wali = sel(r, ix.wali), hpMentah = sel(r, ix.hp), hp = nomorWa(hpMentah);
-    const masalah = !nis && !nama && !kelas ? 'kosong' : !nis || !nama ? 'NIS atau nama kosong' : !kelas ? 'Kelas kosong' : lihat.has(nis) ? 'NIS ganda di file' : null;
+    const nis = sel(r, ix.nis), nama = sel(r, ix.nama), kelas = (ix.kelas < 0 ? kelasSemua : sel(r, ix.kelas).replace(/^kelas\s+/i, '').replace(/\s+/g, '')), wali = sel(r, ix.wali), hpMentah = sel(r, ix.hp), hp = nomorWa(hpMentah);
+    const masalah = (!nis && !nama) || /^\d{1,3}$/.test(nama) ? 'kosong' : !nis || !nama ? 'NIS atau nama kosong' : !kelas ? 'Kelas kosong' : lihat.has(nis) ? 'NIS ganda di file' : null;
     if (nis) lihat.add(nis);
-    return { baris: i + 2, nis, nama, kelas, wali, hp: hp && hpValid(hp) ? hp : '', hpSalah: !!hpMentah && !hpValid(hp), masalah, baru: !ada[nis], lama: ada[nis], kelasBaru: !!kelas && !kk[kelas.toLowerCase()] };
+    const { ex, salah } = bacaExtra(r, ixe);
+    return { baris: hi + i + 2, nis, nama, kelas, wali, hp: hp && hpValid(hp) ? hp : '', hpSalah: !!hpMentah && !hpValid(hp), ex, salah, masalah, baru: !ada[nis], lama: ada[nis], kelasBaru: !!kelas && !kk[kelas.toLowerCase()] };
   }).filter(x => x.masalah !== 'kosong');
-  const ok = IMPOR_HASIL.filter(x => !x.masalah), salah = IMPOR_HASIL.filter(x => x.masalah), kb = [...new Set(ok.filter(x => x.kelasBaru).map(x => x.kelas))], hpSalah = ok.filter(x => x.hpSalah);
+  const ok = IMPOR_HASIL.filter(x => !x.masalah), salah = IMPOR_HASIL.filter(x => x.masalah), kb = [...new Set(ok.filter(x => x.kelasBaru).map(x => x.kelas))], hpSalah = ok.filter(x => x.hpSalah), extraSalah = ok.filter(x => x.salah.length);
+  const nExtra = Object.values(ixe).filter(i => i >= 0).length;
   $('#ip').innerHTML = `<div class="sec"><h2>Hasil pemeriksaan</h2>
   <div class="stats"><div class="stat"><span class="num">${ok.filter(x => x.baru).length}</span><small>Siswa baru</small></div><div class="stat"><span class="num">${ok.filter(x => !x.baru).length}</span><small>Diperbarui</small></div><div class="stat"><span class="num">${salah.length}</span><small>Bermasalah</small></div></div>
+  ${nExtra ? `<p class="hint" style="margin-top:8px">${nExtra} kolom data diri tambahan ikut dibaca (tanggal lahir, alamat, orang tua, dan lainnya).</p>` : ''}
   ${kb.length ? `<p class="hint" style="margin-top:8px">Kelas baru akan dibuat: ${kb.map(h).join(', ')}</p>` : ''}
   ${hpSalah.length ? `<p class="hint" style="margin-top:8px">${hpSalah.length} nomor HP tidak valid dan tidak akan disimpan (baris ${hpSalah.slice(0, 8).map(x => x.baris).join(', ')}${hpSalah.length > 8 ? ', ...' : ''}).</p>` : ''}
+  ${extraSalah.length ? `<p class="hint" style="margin-top:8px">${extraSalah.length} baris punya isian yang tidak dikenali dan dilewati: ${extraSalah.slice(0, 5).map(x => `baris ${x.baris} (${[...new Set(x.salah)].join(', ')})`).join('; ')}${extraSalah.length > 5 ? ', ...' : ''}. Tanggal sebaiknya ditulis 15/08/2015 atau 2015-08-15.</p>` : ''}
   ${salah.length ? `<h3 class="sub">Baris bermasalah (dilewati)</h3>${salah.slice(0, 20).map(x => `<div class="row"><span>Baris ${x.baris}: ${h(x.nama || '-')}</span><span class="stamp bad">${x.masalah}</span></div>`).join('')}` : ''}
-  ${ok.length ? `<h3 class="sub">Contoh data yang akan disimpan</h3>${ok.slice(0, 8).map(x => `<div class="row"><span>${h(x.nama)}<br><small>NIS ${h(x.nis)} - Wali: ${h(x.wali || x.lama?.nama_wali || '-')} - ${h(tampilHp(x.hp || x.lama?.hp_wali))}</small></span><span class="stamp no">${h(x.kelas)}</span></div>`).join('')}<button class="btn" onclick="jalankanImpor()">Impor ${ok.length} siswa</button>` : ''}</div>`;
+  ${ok.length ? `<h3 class="sub">Contoh data yang akan disimpan</h3>${ok.slice(0, 8).map(x => `<div class="row"><span>${h(x.nama)}<br><small>NIS ${h(x.nis)}${x.ex.tanggal_lahir ? ' - lahir ' + tglPanjang(x.ex.tanggal_lahir) : ''}${x.ex.nama_ayah || x.ex.nama_ibu ? ' - ortu: ' + h([x.ex.nama_ayah, x.ex.nama_ibu].filter(Boolean).join(' & ')) : ''}<br>Wali: ${h(x.wali || x.lama?.nama_wali || '-')} - ${h(tampilHp(x.hp || x.lama?.hp_wali))}</small></span><span class="stamp no">${h(x.kelas)}</span></div>`).join('')}<button class="btn" onclick="jalankanImpor()">Impor ${ok.length} siswa</button>` : ''}</div>`;
 }
 async function jalankanImpor() {
   const ok = IMPOR_HASIL.filter(x => !x.masalah);
@@ -1263,7 +1305,11 @@ async function jalankanImpor() {
   if (kb.length) { const { error } = await sb.from('kelas').insert(kb.map(n => ({ nama: n, tingkat: tingkatDari(n) }))); if (error) return toast(error.message, 1); }
   const { data: k } = await sb.from('kelas').select('id,nama');
   const kk = Object.fromEntries(k.map(x => [x.nama.toLowerCase(), x.id]));
-  const rows = ok.map(x => ({ nis: x.nis, nama: x.nama, kelas_id: kk[x.kelas.toLowerCase()], nama_wali: x.wali || x.lama?.nama_wali || null, hp_wali: x.hp || x.lama?.hp_wali || null }));
+  const rows = ok.map(x => {
+    const o = { nis: x.nis, nama: x.nama, kelas_id: kk[x.kelas.toLowerCase()], hp_wali: x.hp || x.lama?.hp_wali || null };
+    KOLOM_EXTRA.forEach(f => { o[f] = (f === 'nama_wali' ? x.wali : x.ex[f]) || x.lama?.[f] || null; });   // isian kosong di file tidak menghapus data lama
+    return o;
+  });
   for (let i = 0; i < rows.length; i += 200) { const { error } = await sb.from('siswa').upsert(rows.slice(i, i + 200), { onConflict: 'nis' }); if (error) return toast(error.message, 1); }
   toast(`${rows.length} siswa diimpor`); vImpor();
 }

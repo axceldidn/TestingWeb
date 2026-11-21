@@ -623,43 +623,148 @@ async function bukaLogBk() {
   $('#bkg').innerHTML = data.map(x => `<div class="row"><span>${h(x.pengguna || '-')} - ${A[x.aksi] || x.aksi}<br><small>${h(x.siswa || '-')}</small></span><small>${new Date(x.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</small></div>`).join('') || kosongHtml('Belum ada riwayat.');
 }
 
-/* ===== DATA SISWA (TU dan admin): nama wali dan HP ===== */
+/* ===== DATA DIRI SISWA DAN ORANG TUA (susunan kolom mengikuti lembar "Data Siswa" e-Rapor) ===== */
+const AGAMA = ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu', 'Lainnya'];
+// [kolom database, label, jenis isian: t teks, d tanggal, n angka, jk L/P, ag agama, a alamat]
+const F_SISWA = [['nisn', 'NISN', 't'], ['jenis_kelamin', 'Jenis kelamin', 'jk'], ['tempat_lahir', 'Tempat lahir', 't'], ['tanggal_lahir', 'Tanggal lahir', 'd'], ['agama', 'Agama', 'ag'], ['anak_ke', 'Anak ke-', 'n'], ['pendidikan_sebelumnya', 'Pendidikan sebelumnya (TK/PAUD/SD)', 't'], ['tgl_masuk', 'Diterima di sekolah ini (tanggal)', 'd'], ['alamat', 'Alamat (jalan, RT/RW)', 'a'], ['kelurahan', 'Kelurahan/Desa', 't'], ['kecamatan', 'Kecamatan', 't']];
+const F_ORTU = [['nama_ayah', 'Nama ayah', 't'], ['pekerjaan_ayah', 'Pekerjaan ayah', 't'], ['nama_ibu', 'Nama ibu', 't'], ['pekerjaan_ibu', 'Pekerjaan ibu', 't'], ['alamat_ortu', 'Alamat orang tua (jalan, RT/RW)', 'a'], ['kelurahan_ortu', 'Kelurahan/Desa', 't'], ['kecamatan_ortu', 'Kecamatan', 't'], ['nama_wali', 'Nama wali (jika bukan orang tua)', 't'], ['pekerjaan_wali', 'Pekerjaan wali', 't']];
+const KOLOM_EXTRA = [...F_SISWA, ...F_ORTU].map(x => x[0]);
+const KOLOM_JENIS = Object.fromEntries([...F_SISWA, ...F_ORTU].map(x => [x[0], x[2]]));
+
+function tglIso(v) {
+  if (v instanceof Date && !isNaN(v)) { const d = new Date(v.getTime() + 12 * 36e5); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+  const t = String(v ?? '').trim();
+  if (!t) return '';
+  let d, m, y, r;
+  if ((r = t.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/))) [y, m, d] = [r[1], r[2], r[3]];
+  else if ((r = t.match(/^(\d{1,2})[-/. ](\d{1,2})[-/. ](\d{2,4})$/))) { [d, m, y] = [r[1], r[2], r[3]]; if (y.length === 2) y = (+y > (new Date().getFullYear() % 100) ? '19' : '20') + y; }
+  else if ((r = t.match(/^(\d{1,2})\s+([A-Za-z]+)\.?\s+(\d{4})$/))) { const i = NAMA_BULAN.findIndex(n => n.toLowerCase().startsWith(r[2].toLowerCase().slice(0, 3))); if (i < 0) return null; [d, m, y] = [r[1], i + 1, r[3]]; }
+  else return null;
+  d = +d; m = +m; y = +y;
+  const k = new Date(y, m - 1, d);
+  if (y < 1990 || y > 2100 || k.getMonth() !== m - 1 || k.getDate() !== d) return null;
+  return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+}
+function normJk(v) { const t = String(v ?? '').trim().toLowerCase(); if (!t) return ''; if (['l', 'lk', 'laki', 'laki-laki', 'laki laki', 'pria'].includes(t)) return 'L'; if (['p', 'pr', 'perempuan', 'wanita'].includes(t)) return 'P'; return null; }
+function umurDari(tgl) {
+  if (!tgl) return null;
+  const l = new Date(String(tgl).slice(0, 10) + 'T00:00:00'), n = new Date();
+  let u = n.getFullYear() - l.getFullYear();
+  if (n.getMonth() < l.getMonth() || (n.getMonth() === l.getMonth() && n.getDate() < l.getDate())) u--;
+  return u;
+}
+const kekurangan = x => [!x.jenis_kelamin && 'L/P', !x.tempat_lahir && 'tempat lahir', !x.tanggal_lahir && 'tanggal lahir', !x.alamat && 'alamat', !(x.nama_ayah || x.nama_ibu || x.nama_wali) && 'orang tua/wali'].filter(Boolean);
+const adaIsi = v => v != null && String(v).trim() !== '';
+const alamatGabung = (a, k, c) => [a, k && 'Kel/Desa ' + k, c && 'Kec. ' + c].filter(adaIsi).join(', ');
+
+/* ----- dasbor data siswa per kelas (guru, admin, kepala sekolah, TU) ----- */
+let DK = { kelas: [], siswa: [] };
+async function vDataKelas() {
+  const k = await sb.from('kelas').select('id,nama,wali_kelas_id').order('nama');
+  DK.kelas = k.data;
+  const awal = k.data.find(x => x.wali_kelas_id === me.id) || k.data[0];
+  $('#main').innerHTML = head('Siswa', 'Data siswa per kelas', 'Data diri siswa dan orang tua. Ketuk nama siswa untuk melihat lengkapnya.') +
+    `<div class="sec"><label style="margin-top:0">Kelas</label><select id="dkk" onchange="muatDataKelas()">${opt(k.data, 'id', 'nama')}</select><input id="dkc" placeholder="Cari nama atau NIS" oninput="saringDataKelas()" style="margin-top:8px"></div>
+    <div id="dkr"></div><div id="dkl"></div><div id="dkd"></div>`;
+  if (awal) $('#dkk').value = awal.id;
+  await muatDataKelas();
+}
+async function muatDataKelas() {
+  const kid = +$('#dkk').value;
+  if (!kid) { $('#dkr').innerHTML = ''; $('#dkl').innerHTML = `<div class="sec">${kosongHtml('Belum ada kelas.')}</div>`; return; }
+  DK.siswa = await ambil(() => sb.from('siswa').select('*').eq('kelas_id', kid).eq('status', 'aktif').order('nama').order('id'));
+  $('#dkd').innerHTML = '';
+  const S = DK.siswa, L = S.filter(x => x.jenis_kelamin === 'L').length, P = S.filter(x => x.jenis_kelamin === 'P').length, kurang = S.filter(x => kekurangan(x).length).length;
+  const bln = bulanWIB().slice(5, 7), ultah = S.filter(x => x.tanggal_lahir && String(x.tanggal_lahir).slice(5, 7) === bln).sort((a, b) => String(a.tanggal_lahir).slice(8, 10).localeCompare(String(b.tanggal_lahir).slice(8, 10)));
+  const stat = (n, t) => `<div class="stat"><span class="num">${n}</span><small>${t}</small></div>`;
+  const kls = DK.kelas.find(x => x.id === kid);
+  $('#dkr').innerHTML = `<div class="stats" style="margin-bottom:12px">${stat(S.length, 'Siswa')}${stat(L, 'Laki-laki')}${stat(P, 'Perempuan')}${stat(kurang, 'Data belum lengkap')}</div>
+    ${ultah.length ? `<div class="sec"><h2>Ulang tahun bulan ini</h2>${ultah.map(x => `<div class="row"><span>${h(x.nama)}</span><small>${+String(x.tanggal_lahir).slice(8, 10)} ${NAMA_BULAN[+bln - 1]} (${umurDari(x.tanggal_lahir) + 0} tahun)</small></div>`).join('')}</div>` : ''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><button class="btn alt sm" onclick="unduhDataKelas()">Unduh Excel kelas ${h(kls?.nama || '')}</button><button class="btn alt sm" onclick="kmBukuInduk(null)">Buku induk kelas (PDF)</button>${['admin', 'tu'].includes(me.role) ? '<button class="btn alt sm" onclick="go(\'datasiswa\')">Ubah data siswa</button>' : ''}</div>`;
+  saringDataKelas();
+}
+function saringDataKelas() {
+  const q = ($('#dkc').value || '').toLowerCase();
+  const l = DK.siswa.filter(x => !q || x.nama.toLowerCase().includes(q) || String(x.nis).includes(q));
+  $('#dkl').innerHTML = `<div class="sec"><h2>${l.length} siswa</h2>${l.map((x, i) => { const kr = kekurangan(x); return `<div class="row" style="cursor:pointer" onclick="bukaSiswaKelas(${x.id})"><span><b>${h(x.nama)}</b><br><small>${x.jenis_kelamin === 'L' ? 'Laki-laki' : x.jenis_kelamin === 'P' ? 'Perempuan' : 'L/P ?'} - ${x.tanggal_lahir ? h(x.tempat_lahir || '') + (x.tempat_lahir ? ', ' : '') + tglPanjang(x.tanggal_lahir) : 'Tanggal lahir belum diisi'}</small></span><span>${kr.length ? '<span class="stamp warn">Belum lengkap</span>' : '<span class="stamp ok">Lengkap</span>'}</span></div>`; }).join('') || kosongHtml('Tidak ada siswa yang cocok.')}</div>`;
+}
+function bukaSiswaKelas(id) {
+  const x = DK.siswa.find(y => y.id === id);
+  if (!x) return;
+  const r = (t, v) => `<div class="row" style="align-items:flex-start"><small style="min-width:42%">${t}</small><span style="text-align:right">${adaIsi(v) ? h(v) : '<span class="mut">-</span>'}</span></div>`;
+  const hp = nomorWa(x.hp_wali), kr = kekurangan(x), umur = umurDari(x.tanggal_lahir);
+  $('#dkd').innerHTML = `<div class="sec"><h2>${h(x.nama)}</h2>${kr.length ? `<p class="hint"><span class="stamp warn">Belum lengkap</span> Belum diisi: ${kr.join(', ')}</p>` : ''}
+    <h3 class="sub">Data peserta didik</h3>${r('NIS', x.nis)}${r('NISN', x.nisn)}${r('Jenis kelamin', x.jenis_kelamin === 'L' ? 'Laki-laki' : x.jenis_kelamin === 'P' ? 'Perempuan' : '')}${r('Tempat lahir', x.tempat_lahir)}${r('Tanggal lahir', x.tanggal_lahir ? tglPanjang(x.tanggal_lahir) + (umur != null ? ` (${umur} tahun)` : '') : '')}${r('Agama', x.agama)}${r('Anak ke-', x.anak_ke)}${r('Pendidikan sebelumnya', x.pendidikan_sebelumnya)}${r('Diterima di sekolah ini', x.tgl_masuk ? tglPanjang(x.tgl_masuk) : '')}${r('Alamat', alamatGabung(x.alamat, x.kelurahan, x.kecamatan))}
+    <h3 class="sub">Orang tua</h3>${r('Nama ayah', x.nama_ayah)}${r('Pekerjaan ayah', x.pekerjaan_ayah)}${r('Nama ibu', x.nama_ibu)}${r('Pekerjaan ibu', x.pekerjaan_ibu)}${r('Alamat orang tua', alamatGabung(x.alamat_ortu, x.kelurahan_ortu, x.kecamatan_ortu))}
+    <h3 class="sub">Wali dan kontak</h3>${r('Nama wali', x.nama_wali)}${r('Pekerjaan wali', x.pekerjaan_wali)}${r('Nomor HP', x.hp_wali ? tampilHp(x.hp_wali) : '')}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn alt sm" style="margin:0" onclick="kmBukuInduk(${x.id})">Buku induk (PDF)</button>${['admin', 'tu'].includes(me.role) ? `<button class="btn sm" style="margin:0" onclick="window.DS_BUKA=${x.id};go('datasiswa')">Ubah data siswa ini</button>` : ''}</div>
+    ${hpValid(hp) ? `<div style="display:flex;gap:8px;margin-top:10px"><a class="btn alt sm" style="${tombolLink}" href="tel:+${hp}">Telepon</a><a class="btn alt sm" style="${tombolLink}" target="_blank" rel="noopener" href="${linkWa(hp, 'Yth. Bapak/Ibu wali dari ' + x.nama + ', ')}">WhatsApp</a></div>` : ''}</div>`;
+  $('#dkd').scrollIntoView();
+}
+function unduhDataKelas() {
+  const kid = +$('#dkk').value, kls = DK.kelas.find(x => x.id === kid), S = DK.siswa;
+  if (!S.length) return toast('Tidak ada data untuk diunduh', 1);
+  const kepala = ['No', 'Nama peserta didik', 'NIS', 'NISN', 'L/P', 'Tempat lahir', 'Tanggal lahir', 'Agama', 'Anak ke', 'Pendidikan sebelumnya', 'Diterima di sekolah ini', 'Alamat', 'Kelurahan/Desa', 'Kecamatan', 'Nama ayah', 'Nama ibu', 'Pekerjaan ayah', 'Pekerjaan ibu', 'Alamat orang tua', 'Kelurahan/Desa (ortu)', 'Kecamatan (ortu)', 'Nama wali', 'Pekerjaan wali', 'HP wali'];
+  unduhBuku(`Data-siswa-${kls?.nama || 'kelas'}`, [['Data siswa', [kepala, ...S.map((x, i) => [i + 1, x.nama, x.nis, x.nisn || '', x.jenis_kelamin || '', x.tempat_lahir || '', x.tanggal_lahir || '', x.agama || '', x.anak_ke || '', x.pendidikan_sebelumnya || '', x.tgl_masuk || '', x.alamat || '', x.kelurahan || '', x.kecamatan || '', x.nama_ayah || '', x.nama_ibu || '', x.pekerjaan_ayah || '', x.pekerjaan_ibu || '', x.alamat_ortu || '', x.kelurahan_ortu || '', x.kecamatan_ortu || '', x.nama_wali || '', x.pekerjaan_wali || '', tampilHp(x.hp_wali) === '-' ? '' : tampilHp(x.hp_wali)])]]]);
+}
+
+/* ----- ubah data siswa (TU dan admin) ----- */
 let DSW = [], DSK = [];
 async function vDataSiswa() {
-  const [s, k] = await Promise.all([ambil(() => sb.from('siswa').select('id,nis,nama,kelas_id,status,nama_wali,hp_wali,kelas(nama)').order('nama').order('id')), sb.from('kelas').select('id,nama').order('nama')]);
+  const [s, k] = await Promise.all([ambil(() => sb.from('siswa').select('*,kelas(nama)').order('nama').order('id')), sb.from('kelas').select('id,nama').order('nama')]);
   DSW = s; DSK = k.data;
-  $('#main').innerHTML = head('Data', 'Data siswa', 'Daftar siswa beserta nama wali dan nomor HP. Untuk memasukkan banyak siswa sekaligus, pakai Impor dari Excel.') +
+  $('#main').innerHTML = head('Data', 'Data siswa', 'Ubah data diri siswa dan orang tua. Untuk memasukkan banyak siswa sekaligus, pakai Impor dari Excel.') +
     `<div class="sec"><div style="display:flex;gap:8px"><input id="dsc" placeholder="Cari nama atau NIS" oninput="saringDs()"><select id="dsk" style="width:auto" onchange="saringDs()"><option value="">Semua</option>${opt(k.data, 'id', 'nama')}</select></div><button class="btn alt" onclick="go('impor')">Impor dari Excel</button></div>
     <div id="dsl"></div><div id="dse"></div>
     <div class="sec"><h2>Tambah siswa</h2><label style="margin-top:0">NIS</label><input id="dn1"><label>Nama lengkap</label><input id="dn2"><label>Kelas</label><select id="dn3"><option value="">Pilih kelas</option>${opt(k.data, 'id', 'nama')}</select>
-    <label>Nama wali</label><input id="dn4"><label>Nomor HP wali</label><input id="dn5" inputmode="tel" placeholder="08123456789"><button class="btn" onclick="tambahSiswaDs()">Simpan siswa</button></div>`;
+    <label>Nomor HP wali</label><input id="dn5" inputmode="tel" placeholder="08123456789"><p class="hint">Data lainnya (tanggal lahir, alamat, orang tua) diisi lewat Ubah setelah siswa tersimpan.</p><button class="btn" onclick="tambahSiswaDs()">Simpan siswa</button></div>`;
   saringDs();
+  if (window.DS_BUKA) { const id = window.DS_BUKA; window.DS_BUKA = null; ubahDs(id); }
 }
 function saringDs() {
   const q = ($('#dsc').value || '').toLowerCase(), kid = +$('#dsk').value || null;
   const l = DSW.filter(x => (x.status || 'aktif') === 'aktif' && (!kid || x.kelas_id === kid) && (!q || x.nama.toLowerCase().includes(q) || String(x.nis).includes(q)));
-  $('#dsl').innerHTML = `<div class="sec"><h2>${l.length} siswa aktif</h2>${l.slice(0, 80).map(x => `<div class="row" style="cursor:pointer" onclick="ubahDs(${x.id})"><span><b>${h(x.nama)}</b> <small>${h(x.kelas?.nama || 'Tanpa kelas')}</small><br><small>NIS ${h(x.nis)} - Wali: ${h(x.nama_wali || '-')} - ${h(tampilHp(x.hp_wali))}</small></span><span class="mut">Ubah</span></div>`).join('') || kosongHtml('Tidak ada siswa.')}${l.length > 80 ? `<p class="hint">Menampilkan 80 dari ${l.length}. Persempit pencarian.</p>` : ''}</div>`;
+  $('#dsl').innerHTML = `<div class="sec"><h2>${l.length} siswa aktif</h2>${l.slice(0, 80).map(x => `<div class="row" style="cursor:pointer" onclick="ubahDs(${x.id})"><span><b>${h(x.nama)}</b> <small>${h(x.kelas?.nama || 'Tanpa kelas')}</small><br><small>NIS ${h(x.nis)} - Ayah: ${h(x.nama_ayah || '-')} - Ibu: ${h(x.nama_ibu || '-')}</small></span><span>${kekurangan(x).length ? '<span class="stamp warn">Belum lengkap</span>' : '<span class="stamp ok">Lengkap</span>'}</span></div>`).join('') || kosongHtml('Tidak ada siswa.')}${l.length > 80 ? `<p class="hint">Menampilkan 80 dari ${l.length}. Persempit pencarian.</p>` : ''}</div>`;
+}
+function isianDs(f, x) {
+  const [k, t, j] = f, v = x[k] ?? '';
+  const id = 'f-' + k;
+  const kontrol = j === 'jk' ? `<select id="${id}"><option value="">Pilih</option><option value="L" ${v === 'L' ? 'selected' : ''}>Laki-laki</option><option value="P" ${v === 'P' ? 'selected' : ''}>Perempuan</option></select>`
+    : j === 'ag' ? `<select id="${id}"><option value="">Pilih</option>${AGAMA.map(a => `<option ${a === v ? 'selected' : ''}>${a}</option>`).join('')}</select>`
+    : j === 'd' ? `<input id="${id}" type="date" value="${h(String(v).slice(0, 10))}">`
+    : j === 'n' ? `<input id="${id}" type="number" min="1" inputmode="numeric" value="${h(v)}">`
+    : j === 'a' ? `<textarea id="${id}" rows="2">${h(v)}</textarea>`
+    : `<input id="${id}" value="${h(v)}">`;
+  return `<label>${t}</label>${kontrol}`;
 }
 function ubahDs(id) {
   const x = DSW.find(y => y.id === id);
-  $('#dse').innerHTML = `<div class="sec"><h2>Ubah ${h(x.nama)}</h2><label style="margin-top:0">Nama lengkap</label><input id="de1" value="${h(x.nama)}"><label>Kelas</label><select id="de2">${DSK.map(k => `<option value="${k.id}" ${k.id === x.kelas_id ? 'selected' : ''}>${h(k.nama)}</option>`).join('')}</select>
-    <label>Nama wali</label><input id="de3" value="${h(x.nama_wali || '')}"><label>Nomor HP wali</label><input id="de4" inputmode="tel" value="${h(x.hp_wali ? tampilHp(x.hp_wali) : '')}"><button class="btn" onclick="simpanDs(${id})">Simpan</button></div>`;
-  $('#dse').scrollIntoView();
+  if (!x) return;
+  $('#dse').innerHTML = `<div class="sec" id="dsf"><h2>Ubah ${h(x.nama)}</h2><label style="margin-top:0">Nama lengkap</label><input id="de1" value="${h(x.nama)}"><label>Kelas</label><select id="de2">${DSK.map(k => `<option value="${k.id}" ${k.id === x.kelas_id ? 'selected' : ''}>${h(k.nama)}</option>`).join('')}</select>
+    <h3 class="sub">Data peserta didik</h3>${F_SISWA.map(f => isianDs(f, x)).join('')}
+    <h3 class="sub">Orang tua dan wali</h3>${F_ORTU.map(f => isianDs(f, x)).join('')}
+    <button class="btn alt sm" style="margin-top:8px" onclick="salinAlamatKeOrtu()">Samakan alamat orang tua dengan alamat siswa</button>
+    <label>Nomor HP wali / orang tua</label><input id="de4" inputmode="tel" value="${h(x.hp_wali ? tampilHp(x.hp_wali) : '')}"><button class="btn" onclick="simpanDs(${id})">Simpan</button></div>`;
+  $('#dsf').scrollIntoView();
 }
+function salinAlamatKeOrtu() { $('#f-alamat_ortu').value = $('#f-alamat').value; $('#f-kelurahan_ortu').value = $('#f-kelurahan').value; $('#f-kecamatan_ortu').value = $('#f-kecamatan').value; }
 async function simpanDs(id) {
   const hp = nomorWa($('#de4').value);
   if (hp && !hpValid(hp)) return toast('Nomor HP tidak valid', 1);
-  const { error } = await sb.from('siswa').update({ nama: $('#de1').value.trim(), kelas_id: +$('#de2').value || null, nama_wali: $('#de3').value.trim() || null, hp_wali: hp || null }).eq('id', id);
+  const o = { nama: $('#de1').value.trim(), kelas_id: +$('#de2').value || null, hp_wali: hp || null };
+  if (!o.nama) return toast('Nama tidak boleh kosong', 1);
+  KOLOM_EXTRA.forEach(k => { const v = ($('#f-' + k).value || '').trim(); o[k] = !v ? null : KOLOM_JENIS[k] === 'n' ? Math.max(1, Math.round(+v)) : v; });
+  const { error } = await sb.from('siswa').update(o).eq('id', id);
   if (error) return toast(error.message, 1);
-  toast('Data siswa disimpan'); vDataSiswa();
+  toast('Data siswa disimpan'); await vDataSiswa();
 }
 async function tambahSiswaDs() {
-  const hp = nomorWa($('#dn5').value), o = { nis: $('#dn1').value.trim(), nama: $('#dn2').value.trim(), kelas_id: +$('#dn3').value || null, nama_wali: $('#dn4').value.trim() || null, hp_wali: hp || null };
+  const hp = nomorWa($('#dn5').value), o = { nis: $('#dn1').value.trim(), nama: $('#dn2').value.trim(), kelas_id: +$('#dn3').value || null, hp_wali: hp || null };
   if (!o.nis || !o.nama) return toast('Isi NIS dan nama dulu', 1);
   if (hp && !hpValid(hp)) return toast('Nomor HP tidak valid', 1);
   const { error } = await sb.from('siswa').insert(o);
   if (error) return toast(String(error.message).includes('duplicate') ? 'NIS ini sudah ada' : error.message, 1);
-  toast('Siswa ditambahkan'); vDataSiswa();
+  toast('Siswa ditambahkan'); await vDataSiswa();
 }
 
 /* ===== BERANDA TU ===== */
@@ -713,4 +818,4 @@ function simpanPengingat() {
   simpanPengaturan('pengingat', { absen_aktif: $('#pg1').checked, absen_jam: $('#pg2').value || '09:00', nilai_aktif: $('#pg3').checked, nilai_hari: Math.max(1, +$('#pg4').value || 7), spp_aktif: $('#pg5').checked, spp_hari: Math.max(1, +$('#pg6').value || 3) }, 'Pengingat disimpan');
 }
 function simpanPresensiGuru() { simpanPengaturan('presensi_guru', { jam_masuk: $('#pj1').value || '07:15' }, 'Pengaturan disimpan'); }
-function simpanIdentitas() { IDENT = null; simpanPengaturan('identitas', { kepsek: $('#pi1').value.trim(), kota: $('#pi2').value.trim(), info_bayar: $('#pi3').value.trim() }, 'Identitas disimpan'); }
+function simpanIdentitas() { const lama = IDENT || {}; IDENT = null; simpanPengaturan('identitas', { ...lama, kepsek: $('#pi1').value.trim(), kota: $('#pi2').value.trim(), info_bayar: $('#pi3').value.trim() }, 'Identitas disimpan'); }

@@ -1,7 +1,7 @@
 // Service worker: aplikasi bisa dipasang (PWA), tetap terbuka saat sinyal buruk,
 // dan menampilkan notifikasi layar kunci.
-const VERSI = 'portal-v4';
-const INTI = ['./', 'index.html', 'app.js', 'modul-v3.js', 'style.css', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/favicon.png'];
+const VERSI = 'portal-v6';
+const INTI = ['./', 'index.html', 'app.js', 'modul-v3.js', 'modul-km.js', 'style.css', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/favicon.png'];
 const CDN = ['cdn.jsdelivr.net', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSI).then(c => c.addAll(INTI)).catch(() => {})); self.skipWaiting(); });
