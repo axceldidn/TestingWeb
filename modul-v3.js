@@ -37,6 +37,16 @@ const linkWa = (hp, teks) => `https://wa.me/${hp}?text=${encodeURIComponent(teks
 const tombolLink = 'text-decoration:none;display:inline-block;margin:0';
 const kosongHtml = t => `<p class="mut" style="margin:0">${t}</p>`;
 
+let LOGO;
+async function muatLogo() {   // logo sekolah (logo.jpg) sebagai data URL untuk PDF; null jika tidak ada
+  if (LOGO !== undefined) return LOGO;
+  try {
+    const r = await fetch('logo.jpg'); if (!r.ok) throw new Error('tidak ada');
+    const b = await r.blob();
+    LOGO = await new Promise((ok, no) => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = no; f.readAsDataURL(b); });
+  } catch { LOGO = null; }
+  return LOGO;
+}
 let IDENT = null;
 async function muatIdentitas() {
   const { data } = await sb.from('pengaturan').select('nilai').eq('kunci', 'identitas');
@@ -103,6 +113,7 @@ function gambarLaporanPdf(doc, d, ctx = {}) {
   let y = 18;
   const tabel = (head, body, opsi = {}) => { doc.autoTable({ startY: y, head: [head], body, theme: 'grid', styles: { fontSize: 9, cellPadding: 1.6 }, headStyles: { fillColor: [27, 58, 107] }, margin: { left: 15, right: 15 }, ...opsi }); y = doc.lastAutoTable.finalY + 6; };
   const judul = t => { if (y > 265) { doc.addPage(); y = 18; } doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text(t, 15, y); y += 3; };
+  if (ctx.logo) doc.addImage(ctx.logo, 'JPEG', 15, 9, 17, 17);
   doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.text(SCHOOL, W / 2, y, { align: 'center' });
   doc.setFont('helvetica', 'normal'); doc.setFontSize(10); y += 6; doc.text('Laporan hasil belajar dan kehadiran', W / 2, y, { align: 'center' });
   y += 5; doc.text(`Semester ${T.semester} tahun ajaran ${T.nama}`, W / 2, y, { align: 'center' }); y += 6;
@@ -133,14 +144,14 @@ async function unduhRaportKelas() {
   if (!kid || !ta) return toast('Pilih kelas dan semester dulu', 1);
   try {
     toast('Mengumpulkan data kelas...');
-    const [r, ident] = await Promise.all([laporanKelasData(kid, ta), muatIdentitas(), muatSkrip(JSPDF)]);
+    const [r, ident, logo] = await Promise.all([laporanKelasData(kid, ta), muatIdentitas(), muatLogo(), muatSkrip(JSPDF)]);
     if (!r) return toast('Kelas atau semester tidak ditemukan', 1);
     if (!r.daftar.length) return toast('Belum ada siswa di kelas ini', 1);
     const tanpaNilai = r.daftar.filter(x => !x.baris.length);
     if (tanpaNilai.length && !confirm(`${tanpaNilai.length} dari ${r.daftar.length} siswa belum punya nilai semester ini (${tanpaNilai.slice(0, 3).map(x => x.S.nama).join(', ')}${tanpaNilai.length > 3 ? ', ...' : ''}). Tetap cetak semuanya?`)) return;
     await muatSkrip(AUTOTABLE);
     const doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
-    const ctx = { wali: r.wali, kepsek: ident.kepsek, kota: ident.kota, tanggal: r.T.tgl_raport || hariWIB() };
+    const ctx = { wali: r.wali, kepsek: ident.kepsek, kota: ident.kota, tanggal: r.T.tgl_raport || hariWIB(), logo };
     r.daftar.forEach((d, i) => { if (i) doc.addPage(); gambarLaporanPdf(doc, d, ctx); });
     doc.save(`Raport-kelas-${r.K.nama}-Semester${r.T.semester}-${r.T.nama.replace('/', '-')}.pdf`);
     toast(`PDF ${r.daftar.length} raport diunduh`);

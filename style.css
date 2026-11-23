@@ -4,7 +4,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 "Plus Jaka
 h1,h2,h3,.brand,.num{font-weight:800;letter-spacing:-.02em}
 [hidden]{display:none!important}
 .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 12px;padding:12px 18px;background:var(--g);color:#fff}
-.brand{font-size:18px}
+.brand{font-size:18px;display:flex;align-items:center;gap:9px}.logo-top{height:34px;width:34px;border-radius:50%;background:#fff;object-fit:contain;flex:none}
 .who{font-size:13px;text-align:right;line-height:1.3}.who small{display:block;color:#c3cfe6}
 .lnk{border:0;background:none;color:var(--acc);font:inherit;font-size:13px;text-decoration:underline;padding:0;cursor:pointer}
 .demo{background:#fff1b8;border-bottom:1px solid #e6cf6b;padding:8px 18px;font-size:13px}
@@ -121,3 +121,11 @@ button{font:inherit;cursor:pointer}
 .kmtg{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;margin:6px 0;border:1px solid var(--line);border-radius:8px;font-weight:400}.kmtg.mati{opacity:.5}.kmtg input{width:auto;margin-top:3px}
 .kmpen{color:var(--warn);font-size:12px}
 .kmed{border:1px solid var(--g);background:#fff;color:var(--g);border-radius:6px;padding:2px 8px;margin-top:4px;font:inherit;font-size:11px;font-weight:600;cursor:pointer}
+
+.kmtpbar{margin:0 16px 10px;padding:9px 12px;background:#eef3fb;border-left:4px solid var(--g);border-radius:0 8px 8px 0;font-size:13.5px;line-height:1.45;min-height:44px}.kmtpbar small{color:var(--mut)}
+.kmthd{min-width:150px;max-width:170px;vertical-align:top}
+.kmdesc{display:block;font-weight:400;font-size:11px;color:var(--mut);white-space:normal;text-align:left;margin-top:3px;line-height:1.3}
+.kmgrid .kmaktif{background:#dfe9fb!important}.kmgrid thead th.kmaktif{color:var(--g)}
+.kmgrid .kmend{position:sticky;right:0;z-index:1;box-shadow:-1px 0 0 var(--line)}.kmgrid thead .kmend{z-index:3;background:#eef1f6}
+
+.logo-login{display:block;width:92px;height:92px;object-fit:contain;margin:0 0 14px}

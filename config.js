@@ -2,11 +2,11 @@
 // Semua nilai di bawah aman dilihat publik (kunci anon dilindungi aturan database).
 window.APP_CONFIG = {
   // Nama sekolah yang tampil di layar masuk, bilah atas, dan laporan PDF
-  SEKOLAH: 'sdit tahfidz daarul mukminin',
+  SEKOLAH: 'SDIT Tahfidz Daarul Mu\'minin',
 
   // Supabase: Project Settings > API
   SUPABASE_URL: 'https://nwlenudmfxsehhidrjhh.supabase.co',        // contoh: https://abcdefgh.supabase.co
-  SUPABASE_ANON_KEY: 'https://nwlenudmfxsehhidrjhh.supabase.co',   // kunci "anon" atau "publishable" (BUKAN service_role)
+  SUPABASE_ANON_KEY: 'sb_publishable_yWa7WClXCsOvLFpMGvO2OQ_RvENPuBA',   // kunci "anon" atau "publishable" (BUKAN service_role)
 
   // Kunci publik notifikasi layar kunci (dibuat dengan alat/buat-kunci-vapid.html).
   // Kosongkan jika belum memakai notifikasi layar kunci.
